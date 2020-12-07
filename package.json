@@ -1,0 +1,14 @@
+{
+  "name": "api-watch",
+  "version": "1.0.0",
+  "description": "watch RST bug",
+  "main": "controller.js",
+  "scripts": {
+    "start": "node controller.js"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.12.0"
+  }
+}

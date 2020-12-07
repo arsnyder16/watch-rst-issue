@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: watch
+spec:
+  selector:
+    matchLabels:
+      app: watch
+  revisionHistoryLimit: 1
+  replicas: 2
+  strategy:
+    type: Recreate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: watch   
+        change: '0'     
+        aadpodidbinding: bind
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      volumes:
+      - name: shared-data
+        hostPath:
+          path: /shared-data
+      containers:
+      - name: watch
+        image: myacr.azurecr.io/watch:v1
+      - name: tcpdump
+        image: corfr/tcpdump
+        command:
+        - "/usr/sbin/tcpdump"
+        - "-i"
+        - "any"
+        - "-nn"
+        - "-w"
+        - "/shared-data/cap-pod.pcap"
+        volumeMounts:
+        - name: shared-data
+          mountPath: /shared-data
